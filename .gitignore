@@ -12,3 +12,5 @@ web-build/
 *.log
 .env
 .env.local
+android/
+ios/
