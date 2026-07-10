@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
+import { ResizeMode, Video, type AVPlaybackStatus } from "expo-av";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
-import Video, { type VideoRef } from "react-native-video";
 import {
   fetchMediaDetail,
   fetchPlaybackPlan,
@@ -18,12 +18,11 @@ export default function PlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const mediaId = Number(id);
   const router = useRouter();
-  const videoRef = useRef<VideoRef>(null);
+  const videoRef = useRef<Video>(null);
   const [uri, setUri] = useState<string | null>(null);
   const [audioOnly, setAudioOnly] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const progressTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastPosition = useRef(0);
 
   useEffect(() => {
@@ -53,13 +52,23 @@ export default function PlayerScreen() {
     })();
     return () => {
       mounted = false;
-      if (progressTimer.current) clearInterval(progressTimer.current);
       playbackEnd(mediaId).catch(() => {});
       if (lastPosition.current > 0) {
         saveProgress(mediaId, Math.floor(lastPosition.current)).catch(() => {});
       }
     };
   }, [mediaId]);
+
+  const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
+    if (!status.isLoaded) {
+      if (status.error) setError(t("player.error"));
+      return;
+    }
+    lastPosition.current = status.positionMillis / 1000;
+    if (status.didJustFinish) {
+      saveProgress(mediaId, Math.floor(lastPosition.current), true).catch(() => {});
+    }
+  };
 
   if (loading) {
     return (
@@ -90,15 +99,10 @@ export default function PlayerScreen() {
         ref={videoRef}
         source={{ uri }}
         style={audioOnly ? styles.audio : styles.video}
-        resizeMode="contain"
-        controls
-        paused={false}
-        onProgress={(e) => {
-          lastPosition.current = e.currentTime;
-        }}
-        onEnd={() => {
-          saveProgress(mediaId, Math.floor(lastPosition.current), true).catch(() => {});
-        }}
+        resizeMode={ResizeMode.CONTAIN}
+        useNativeControls
+        shouldPlay
+        onPlaybackStatusUpdate={onPlaybackStatusUpdate}
         onError={() => setError(t("player.error"))}
       />
     </View>
@@ -108,7 +112,7 @@ export default function PlayerScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#000", justifyContent: "center" },
   video: { width: "100%", height: "100%" },
-  audio: { width: 0, height: 0 },
+  audio: { width: 1, height: 1 },
   close: { position: "absolute", top: 48, left: 16, zIndex: 10, padding: 8 },
   center: { flex: 1, backgroundColor: "#000", alignItems: "center", justifyContent: "center", gap: 12 },
   loadingText: { color: colors.textSecondary },

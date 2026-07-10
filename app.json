@@ -7,6 +7,8 @@
     "icon": "./assets/icon.png",
     "scheme": "vauldy",
     "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "platforms": ["ios", "android"],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -25,7 +27,9 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-asset",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
