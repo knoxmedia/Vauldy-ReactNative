@@ -42,6 +42,31 @@ export type MediaItem = {
   music_artist?: string;
   library_type?: string;
   overview?: string;
+  meta_json?: string;
+  bitrate?: number;
+};
+
+export type MediaDetail = MediaItem & {
+  md5?: string;
+};
+
+export type MusicTrackRow = {
+  id: number;
+  media_id: number;
+  track_number?: number;
+  title: string;
+  artist?: string;
+  duration?: number;
+  bitrate?: number;
+  format?: string;
+  album_id?: number;
+  album_title?: string;
+  album_artist?: string;
+  artist_id?: number;
+  year?: number;
+  artwork_path?: string;
+  file_path?: string;
+  created_at?: string;
 };
 
 export type HistoryItem = {

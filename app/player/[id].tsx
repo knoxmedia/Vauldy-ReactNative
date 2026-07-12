@@ -13,6 +13,7 @@ import {
 import { colors } from "@/constants/theme";
 import { t } from "@/i18n";
 import { mediaPlaySrc, withAccessToken } from "@/lib/mediaUrl";
+import { useMusicPlayerStore } from "@/store/musicPlayer";
 
 export default function PlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -20,22 +21,27 @@ export default function PlayerScreen() {
   const router = useRouter();
   const videoRef = useRef<Video>(null);
   const [uri, setUri] = useState<string | null>(null);
-  const [audioOnly, setAudioOnly] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const lastPosition = useRef(0);
+  const pauseForVideo = useMusicPlayerStore((s) => s.pauseForVideo);
+  const resumeAfterVideo = useMusicPlayerStore((s) => s.resumeAfterVideo);
+
+  useEffect(() => {
+    pauseForVideo();
+    return () => resumeAfterVideo();
+  }, [pauseForVideo, resumeAfterVideo]);
 
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
         const detail = await fetchMediaDetail(mediaId);
-        setAudioOnly(detail.file_type === "audio");
-        await playbackStart(mediaId);
         if (detail.file_type === "audio") {
-          setUri(mediaPlaySrc(mediaId));
+          router.back();
           return;
         }
+        await playbackStart(mediaId);
         const plan = await fetchPlaybackPlan(mediaId);
         if (plan.hls_master) {
           setUri(withAccessToken(plan.hls_master));
@@ -57,7 +63,7 @@ export default function PlayerScreen() {
         saveProgress(mediaId, Math.floor(lastPosition.current)).catch(() => {});
       }
     };
-  }, [mediaId]);
+  }, [mediaId, router]);
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     if (!status.isLoaded) {
@@ -98,7 +104,7 @@ export default function PlayerScreen() {
       <Video
         ref={videoRef}
         source={{ uri }}
-        style={audioOnly ? styles.audio : styles.video}
+        style={styles.video}
         resizeMode={ResizeMode.CONTAIN}
         useNativeControls
         shouldPlay
@@ -112,7 +118,6 @@ export default function PlayerScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#000", justifyContent: "center" },
   video: { width: "100%", height: "100%" },
-  audio: { width: 1, height: 1 },
   close: { position: "absolute", top: 48, left: 16, zIndex: 10, padding: 8 },
   center: { flex: 1, backgroundColor: "#000", alignItems: "center", justifyContent: "center", gap: 12 },
   loadingText: { color: colors.textSecondary },

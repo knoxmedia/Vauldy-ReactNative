@@ -10,15 +10,20 @@ type Props = {
   onPress: () => void;
   aspect?: "poster" | "landscape";
   progress?: number;
+  /** Fill parent width — use in grid lists; default fixed width for horizontal rows. */
+  fill?: boolean;
 };
 
-export default function MediaCard({ item, onPress, aspect = "poster", progress }: Props) {
+export default function MediaCard({ item, onPress, aspect = "poster", progress, fill = false }: Props) {
   const poster = mediaPosterSrc(item);
   const year = mediaReleaseYear(item);
   const isLandscape = aspect === "landscape";
 
   return (
-    <Pressable style={[styles.card, isLandscape && styles.cardLandscape]} onPress={onPress}>
+    <Pressable
+      style={[styles.card, fill && styles.cardFill, !fill && isLandscape && styles.cardLandscape]}
+      onPress={onPress}
+    >
       <View style={[styles.posterWrap, isLandscape && styles.posterLandscape]}>
         {poster ? (
           <Image source={{ uri: poster }} style={styles.poster} contentFit="cover" transition={200} />
@@ -49,6 +54,7 @@ export default function MediaCard({ item, onPress, aspect = "poster", progress }
 const styles = StyleSheet.create({
   card: { width: 120, marginRight: 12 },
   cardLandscape: { width: 180 },
+  cardFill: { width: "100%", marginRight: 0, minWidth: 0 },
   posterWrap: {
     width: "100%",
     aspectRatio: 2 / 3,

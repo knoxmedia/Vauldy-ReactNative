@@ -122,7 +122,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingBottom: 32 },
+  scroll: { paddingBottom: 140 },
   header: { paddingHorizontal: spacing.md, paddingTop: spacing.md, paddingBottom: spacing.sm },
   brand: { color: colors.text, fontSize: 28, fontWeight: "700" },
   section: { marginTop: spacing.lg },

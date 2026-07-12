@@ -40,7 +40,7 @@ export default function FavoritesScreen() {
         ListEmptyComponent={<EmptyState />}
         renderItem={({ item }) => (
           <View style={styles.cell}>
-            <MediaCard item={item} onPress={() => router.push(`/media/${item.id}`)} />
+            <MediaCard fill item={item} onPress={() => router.push(`/media/${item.id}`)} />
           </View>
         )}
       />
@@ -50,7 +50,7 @@ export default function FavoritesScreen() {
 
 const styles = StyleSheet.create({
   title: { color: colors.text, fontSize: 22, fontWeight: "700", marginBottom: spacing.md, marginTop: spacing.sm },
-  list: { paddingBottom: 24 },
+  list: { paddingBottom: 140 },
   row: { gap: 8, marginBottom: 8 },
-  cell: { flex: 1, maxWidth: "33.33%" },
+  cell: { flex: 1, minWidth: 0, maxWidth: "33.33%" },
 });

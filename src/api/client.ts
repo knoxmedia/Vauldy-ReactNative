@@ -7,7 +7,9 @@ import type {
   DocumentPreviewInfo,
   HistoryItem,
   Library,
+  MediaDetail,
   MediaItem,
+  MusicTrackRow,
   PlaybackPlan,
   ReadProgress,
   SessionUserInfo,
@@ -83,6 +85,21 @@ export async function fetchLibraries(): Promise<Library[]> {
   return data?.items ?? [];
 }
 
+export async function fetchLibraryTracks(libraryId: number): Promise<MusicTrackRow[]> {
+  const { data } = await api.get<{ items?: MusicTrackRow[] }>(`/api/v1/library/${libraryId}/tracks`);
+  return data?.items ?? [];
+}
+
+export type MediaLyricsResponse = {
+  lrc: string;
+  source?: string;
+};
+
+export async function fetchMediaLyrics(mediaId: number): Promise<MediaLyricsResponse> {
+  const { data } = await api.get<MediaLyricsResponse>(`/api/v1/media/${mediaId}/lyrics`);
+  return data ?? { lrc: "", source: "" };
+}
+
 export async function fetchMedia(
   libraryId?: number,
   opts?: {
@@ -102,8 +119,13 @@ export async function fetchMedia(
   return data?.items ?? [];
 }
 
-export async function fetchMediaDetail(mediaId: number): Promise<MediaItem> {
-  const { data } = await api.get<MediaItem>(`/api/v1/media/${mediaId}`);
+export async function fetchMediaDetail(mediaId: number): Promise<MediaDetail> {
+  const { data } = await api.get<MediaDetail>(`/api/v1/media/${mediaId}`);
+  return data;
+}
+
+export async function fetchAuthenticatedText(path: string): Promise<string> {
+  const { data } = await api.get<string>(path, { responseType: "text" });
   return data;
 }
 

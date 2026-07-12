@@ -1,7 +1,10 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { setUnauthorizedHandler } from "@/api/client";
+import GlobalMusicEngine from "@/components/player/GlobalMusicEngine";
+import FloatingMusicBar from "@/components/player/FloatingMusicBar";
 import { useAuthStore } from "@/store/auth";
 import { useConfigStore } from "@/store/config";
 
@@ -34,8 +37,9 @@ function useProtectedRoute() {
 export default function RootLayout() {
   useProtectedRoute();
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar style="light" />
+      <GlobalMusicEngine />
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: "#0a0a0a" },
@@ -54,6 +58,7 @@ export default function RootLayout() {
         <Stack.Screen name="reader/[id]" options={{ title: "" }} />
         <Stack.Screen name="photo/[id]" options={{ headerShown: false, presentation: "fullScreenModal" }} />
       </Stack>
-    </>
+      <FloatingMusicBar />
+    </SafeAreaProvider>
   );
 }

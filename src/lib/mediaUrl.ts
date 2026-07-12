@@ -60,7 +60,7 @@ export function albumArtworkSrc(albumId: number): string {
 }
 
 export function musicMediaPosterSrc(
-  r: Pick<import("@/api/types").MediaItem, "id" | "poster_url" | "music_album_id" | "file_type">,
+  r: Pick<import("@/api/types").MediaItem, "id" | "poster_url" | "music_album_id" | "file_type" | "file_path" | "encrypted_asset">,
 ): string | null {
   if (r.file_type !== "audio") return mediaPosterSrc(r);
   if (r.music_album_id && r.music_album_id > 0) return albumArtworkSrc(r.music_album_id);
@@ -69,7 +69,7 @@ export function musicMediaPosterSrc(
 }
 
 export function mediaPosterSrc(
-  r: Pick<import("@/api/types").MediaItem, "id" | "poster_url" | "music_album_id" | "encrypted_asset"> & {
+  r: Pick<import("@/api/types").MediaItem, "id" | "poster_url" | "music_album_id" | "encrypted_asset" | "file_path"> & {
     file_type?: string;
   },
 ): string {
@@ -78,7 +78,26 @@ export function mediaPosterSrc(
   if (r.file_type === "document") return documentCoverSrc(r.id);
   const u = normalizeListPosterUrl(r.poster_url || "");
   if (u) return withAccessToken(u);
-  return localPosterSrc(r.id, r.encrypted_asset);
+  const encrypted = Boolean(r.encrypted_asset) || (r.file_path || "").toLowerCase().endsWith(".enc");
+  return localPosterSrc(r.id, encrypted);
+}
+
+/** Detail page poster: prefer scraped meta poster, then list poster / derived frame. */
+export function mediaDetailPosterSrc(
+  detail: Pick<import("@/api/types").MediaItem, "id" | "file_path" | "poster_url" | "encrypted_asset">,
+  metaPoster?: string,
+): string {
+  const fromMeta = normalizeListPosterUrl(metaPoster || "");
+  if (fromMeta) return withAccessToken(fromMeta);
+  const encrypted =
+    Boolean(detail.encrypted_asset) || (detail.file_path || "").toLowerCase().endsWith(".enc");
+  return mediaPosterSrc({
+    id: detail.id,
+    poster_url: detail.poster_url,
+    encrypted_asset: encrypted,
+    file_path: detail.file_path,
+    file_type: "video",
+  });
 }
 
 export function mediaPlaySrc(mediaId: number): string {

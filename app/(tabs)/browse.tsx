@@ -46,5 +46,5 @@ export default function BrowseScreen() {
 
 const styles = StyleSheet.create({
   title: { color: colors.text, fontSize: 22, fontWeight: "700", marginBottom: spacing.md, marginTop: spacing.sm },
-  list: { paddingBottom: 24 },
+  list: { paddingBottom: 140 },
 });

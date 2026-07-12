@@ -12,24 +12,34 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0f1419"
+      "backgroundColor": "#f5f7fa"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.knoxmedia.vauldy"
+      "bundleIdentifier": "com.knoxmedia.vauldy",
+      "infoPlist": {
+        "UIBackgroundModes": ["audio"]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0f1419"
+        "backgroundColor": "#e8eef5"
       },
-      "package": "com.knoxmedia.vauldy"
+      "package": "com.knoxmedia.vauldy",
+      "usesCleartextTraffic": true
     },
     "plugins": [
       "expo-router",
       "expo-secure-store",
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-av",
+        {
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

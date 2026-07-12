@@ -6,9 +6,17 @@
   "scripts": {
     "start": "expo start",
     "start:go": "expo start --go",
-    "android": "expo run:android",
+    "android": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/with-android-env.ps1 run:android",
     "ios": "expo run:ios",
-    "typecheck": "tsc --noEmit"
+    "prebuild": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/with-android-env.ps1 prebuild",
+    "apk:release": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-release-apk.ps1 -Arch arm64-v8a",
+    "apk:release:arm64": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-release-apk.ps1 -Arch arm64-v8a",
+    "apk:release:armv7": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-release-apk.ps1 -Arch armeabi-v7a",
+    "apk:release:all": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-release-apk.ps1 -Arch all",
+    "apk:install": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-release-apk.ps1 -Arch arm64-v8a -Install",
+    "typecheck": "tsc --noEmit",
+    "generate:icons": "node scripts/generate-adaptive-icon.mjs",
+    "postinstall": "node scripts/embed-pdfjs.mjs"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
@@ -26,6 +34,7 @@
     "expo-router": "~4.0.20",
     "expo-secure-store": "~14.0.1",
     "expo-status-bar": "~2.0.1",
+    "pdfjs-dist": "^3.11.174",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.9",
