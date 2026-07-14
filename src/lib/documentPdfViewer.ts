@@ -81,7 +81,7 @@ function pdfViewerRuntime(loadSourceJs: string, initialPage: number, workerSrc: 
       var rendering = false;
       var pendingPage = 0;
       var viewScale = 1;
-      var minViewScale = 1;
+      var minViewScale = 0.3;
       var maxViewScale = 4;
       var pinchStartDist = 0;
       var pinchStartScale = 1;
@@ -131,7 +131,7 @@ function pdfViewerRuntime(loadSourceJs: string, initialPage: number, workerSrc: 
           var wrapWidth = (wrap && wrap.clientWidth) || window.innerWidth || 360;
           var baseViewport = page.getViewport({ scale: 1 });
           var fitScale = baseViewport.width > 0 ? wrapWidth / baseViewport.width : 1.35;
-          var renderScale = Math.max(1, fitScale * 1.05);
+          var renderScale = fitScale;
           var viewport = page.getViewport({ scale: renderScale });
           var canvas = document.createElement('canvas');
           canvas.width = viewport.width;

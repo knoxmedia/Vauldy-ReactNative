@@ -27,7 +27,11 @@
         "backgroundColor": "#e8eef5"
       },
       "package": "com.knoxmedia.vauldy",
-      "usesCleartextTraffic": true
+      "usesCleartextTraffic": true,
+      "androidNavigationBar": {
+        "backgroundColor": "#0a0a0a",
+        "barStyle": "light-content"
+      }
     },
     "plugins": [
       "expo-router",
