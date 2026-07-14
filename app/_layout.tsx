@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useFonts } from "expo-font";
 import { setUnauthorizedHandler } from "@/api/client";
 import GlobalMusicEngine from "@/components/player/GlobalMusicEngine";
 import FloatingMusicBar from "@/components/player/FloatingMusicBar";
@@ -37,6 +38,11 @@ function useProtectedRoute() {
 
 export default function RootLayout() {
   useProtectedRoute();
+
+  useFonts({
+    ionicons: require("../assets/fonts/Ionicons.ttf"),
+  });
+
   return (
     <SafeAreaProvider>
       <View style={{ flex: 1, backgroundColor: "#0a0a0a" }}>

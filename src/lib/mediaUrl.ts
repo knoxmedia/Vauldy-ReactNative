@@ -84,7 +84,7 @@ export function mediaPosterSrc(
 
 /** Detail page poster: prefer scraped meta poster, then list poster / derived frame. */
 export function mediaDetailPosterSrc(
-  detail: Pick<import("@/api/types").MediaItem, "id" | "file_path" | "poster_url" | "encrypted_asset">,
+  detail: Pick<import("@/api/types").MediaItem, "id" | "file_path" | "poster_url" | "encrypted_asset" | "file_type" | "music_album_id">,
   metaPoster?: string,
 ): string {
   const fromMeta = normalizeListPosterUrl(metaPoster || "");
@@ -96,7 +96,8 @@ export function mediaDetailPosterSrc(
     poster_url: detail.poster_url,
     encrypted_asset: encrypted,
     file_path: detail.file_path,
-    file_type: "video",
+    file_type: detail.file_type || "video",
+    music_album_id: detail.music_album_id,
   });
 }
 

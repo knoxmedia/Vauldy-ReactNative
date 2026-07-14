@@ -39,7 +39,6 @@ export default function SetupScreen() {
       } catch {
         /* optional */
       }
-      Alert.alert(t("setup.success"));
       router.replace("/login");
     } catch {
       setServerUrl(null);

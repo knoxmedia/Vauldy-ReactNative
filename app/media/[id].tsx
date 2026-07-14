@@ -84,7 +84,7 @@ export default function MediaDetailScreen() {
     ratingText || null,
   ].filter(Boolean) as string[];
 
-  const useCompactTech = isVideo && isPortrait && techItems.length > 0;
+  const useCompactTech = isPortrait && techItems.length > 0;
 
   const primaryAction = async () => {
     if (item.file_type === "video") return router.push(`/player/${item.id}`);
@@ -142,12 +142,25 @@ export default function MediaDetailScreen() {
           {poster ? (
             <Image
               source={{ uri: poster }}
-              style={[styles.poster, isVideo && styles.posterVideo]}
+              style={[
+                styles.poster,
+                isVideo && styles.posterVideo,
+                item.file_type === "audio" && styles.posterSquare,
+                (item.file_type === "image" || item.file_type === "document") && styles.posterWide,
+              ]}
               contentFit="cover"
               transition={200}
             />
           ) : (
-            <View style={[styles.poster, isVideo && styles.posterVideo, styles.placeholder]}>
+            <View
+              style={[
+                styles.poster,
+                isVideo && styles.posterVideo,
+                item.file_type === "audio" && styles.posterSquare,
+                (item.file_type === "image" || item.file_type === "document") && styles.posterWide,
+                styles.placeholder,
+              ]}
+            >
               <Ionicons name="film-outline" size={48} color={colors.textMuted} />
             </View>
           )}
@@ -258,6 +271,14 @@ const styles = StyleSheet.create({
   posterVideo: {
     width: "92%",
     aspectRatio: 16 / 9,
+  },
+  posterSquare: {
+    width: "64%",
+    aspectRatio: 1,
+  },
+  posterWide: {
+    width: "92%",
+    aspectRatio: 16 / 10,
   },
   placeholder: { alignItems: "center", justifyContent: "center" },
   title: { color: colors.text, fontSize: 24, fontWeight: "700", marginBottom: 8, paddingHorizontal: spacing.md },

@@ -38,7 +38,6 @@ export default function LoginScreen() {
         avatarUrl: user.avatar_url || null,
         uiLocale: user.ui_locale || null,
       });
-      Alert.alert(t("login.success"));
       router.replace("/(tabs)");
     } catch {
       Alert.alert(t("login.failure"));
