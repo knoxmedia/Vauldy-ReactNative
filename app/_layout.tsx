@@ -62,7 +62,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="library/[id]" options={{ title: "" }} />
           <Stack.Screen name="media/[id]" options={{ title: "" }} />
-          <Stack.Screen name="player/[id]" options={{ headerShown: false, orientation: "landscape" }} />
+          <Stack.Screen name="player/[id]" options={{ headerShown: false }} />
           <Stack.Screen name="reader/[id]" options={{ title: "" }} />
           <Stack.Screen name="photo/[id]" options={{ headerShown: false, presentation: "fullScreenModal" }} />
         </Stack>
